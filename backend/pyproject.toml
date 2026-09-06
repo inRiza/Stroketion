@@ -3,21 +3,33 @@ name = "hology-backend"
 version = "0.1.0"
 description = "Backend API for Hology stroke monitoring system"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11,<3.12"
 dependencies = [
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.32.0",
     "sqlalchemy[asyncio]>=2.0.36",
     "asyncpg>=0.30.0",
+    "aiosqlite>=0.20.0",
     "redis>=5.2.0",
     "pydantic-settings>=2.6.0",
     "python-jose[cryptography]>=3.3.0",
     "passlib[bcrypt]>=1.7.4",
     "alembic>=1.14.0",
     "httpx>=0.28.0",
+    "email-validator>=2.2.0",
+    "numpy>=1.22,<2.0",
+    "websockets>=14.0",
 ]
 
 [project.optional-dependencies]
+speech = [
+    "torch>=2.1.0,<2.4.0",
+    "torchaudio>=2.1.0,<2.4.0",
+    "praat-parselmouth>=0.4.4",
+    "deepfilternet>=0.5.6",
+    "soundfile>=0.12.1",
+    "openai-whisper>=20231117",
+]
 dev = [
     "pytest>=8.3.0",
     "pytest-asyncio>=0.24.0",
