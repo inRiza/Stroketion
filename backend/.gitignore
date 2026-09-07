@@ -11,3 +11,8 @@ htmlcov/
 dist/
 build/
 *.db
+hology.db
+stroketion.db
+
+# demo seed scripts (local only)
+scripts/
