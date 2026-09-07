@@ -1,21 +1,23 @@
 from fastapi import APIRouter
 
+from app.api.deps import CurrentUser, DbSession
+from app.schemas.common import BaselineResponse
+from app.schemas.speech import SpeechBaselineUpdate, SpeechCalibrateRequest
+from app.services import baseline_service
+
 router = APIRouter()
 
 
-@router.get("/{user_id}")
-async def get_baseline(user_id: str):
-    """Get personal baseline for motion and speech behaviour."""
-    return {"message": "not implemented", "user_id": user_id}
+@router.get("/me", response_model=BaselineResponse)
+async def get_my_baseline(db: DbSession, user: CurrentUser):
+    return await baseline_service.get_baseline(db, user)
 
 
-@router.post("/{user_id}")
-async def create_baseline(user_id: str):
-    """Create or initialize personal baseline."""
-    return {"message": "not implemented", "user_id": user_id}
+@router.post("/me/speech/calibrate", response_model=BaselineResponse)
+async def calibrate_speech(db: DbSession, user: CurrentUser, body: SpeechCalibrateRequest):
+    return await baseline_service.calibrate_speech_baseline(db, user, body.features)
 
 
-@router.patch("/{user_id}")
-async def update_baseline(user_id: str):
-    """Update personal baseline from collected data."""
-    return {"message": "not implemented", "user_id": user_id}
+@router.patch("/me/speech", response_model=BaselineResponse)
+async def update_speech_baseline(db: DbSession, user: CurrentUser, body: SpeechBaselineUpdate):
+    return await baseline_service.update_speech_baseline(db, user, body.speech_data)
