@@ -1,6 +1,8 @@
-![Stroketion](./mobile/assets/logo/logo_r.svg)
+<p align="center">
+  <img src="./mobile/assets/logo/logo_r.svg" alt="Stroketion" width="96" height="83" />
+</p>
 
-# Stroketion
+<h1 align="center">Stroketion</h1>
 
 Aplikasi monitoring stroke berbasis sensor ponsel dan analisis AI. Balance, speech, dan risiko sesi untuk pasien dan caregiver.
 
@@ -79,13 +81,15 @@ Semua metrik gerak dihitung di **mobile** (`motion_processor.dart`). Backend han
 
 ### Motion and balance (IMU only)
 
-| Signal | Sumber | Fungsi |
-| ------ | ------ | ------ |
-| SVM | Accelerometer | Magnitudo g-force, free-fall, impact |
-| AVM | Gyroscope | Kecepatan rotasi, bantuan konfirmasi jatuh |
-| Postural θ | Accel + gyro (complementary filter) | Kemiringan postur HP relatif gravitasi |
-| Heading | Accelerometer saja | Kompas UI, deviasi dari posisi awal sesi |
-| GPS | `geolocator` | Rute outdoor saja, tidak mempengaruhi skor |
+
+| Signal     | Sumber                              | Fungsi                                     |
+| ---------- | ----------------------------------- | ------------------------------------------ |
+| SVM        | Accelerometer                       | Magnitudo g-force, free-fall, impact       |
+| AVM        | Gyroscope                           | Kecepatan rotasi, bantuan konfirmasi jatuh |
+| Postural θ | Accel + gyro (complementary filter) | Kemiringan postur HP relatif gravitasi     |
+| Heading    | Accelerometer saja                  | Kompas UI, deviasi dari posisi awal sesi   |
+| GPS        | `geolocator`                        | Rute outdoor saja, tidak mempengaruhi skor |
+
 
 **Fall state machine:** Normal → free-fall (SVM < 2) → impact (SVM > 25) → inactivity post-impact → fall confirmed → SOS.
 
@@ -133,6 +137,8 @@ SVM = sqrt(ax^2 + ay^2 + az^2)
 - Impact (timeline + FSM): SVM > 25 m/s²
 - Impact berat (penalti skor): SVM > 30 m/s²
 
+
+
 ### Angular Velocity Magnitude (AVM)
 
 ```
@@ -141,6 +147,8 @@ AVM = sqrt(wx^2 + wy^2 + wz^2)   [rad/s → deg/s]
 
 - Rotasi saat benturan (bantuan deteksi jatuh): AVM ≥ 60 deg/s
 - Penalti balance score: max AVM > 200 deg/s (-8 poin)
+
+
 
 ### Postur (accelerometer + complementary filter)
 
@@ -186,86 +194,3 @@ balance = clamp(0, 100 - sum(penalties))
 | tilt > 60 deg              | -5               |
 
 
-
-
-### Speech score (backend, prioritas)
-
-Penalti dari deviasi baseline akustik, risiko disartria/afasia, rasio durasi bicara, dan rekaman SOS (-6 per segmen, max -12). Fallback lokal mobile jika pipeline offline.
-
-### Overall and risk
-
-```
-overall = round(balance * 0.65 + speech * 0.35)
-```
-
-**HIGH** jika: fall > 0, overall < 45, balance < 50, impact >= 3 dengan balance < 60, atau dysarthria/aphasia high (dan kombinasi medium + bukti klinis).
-
-**MEDIUM** jika: overall < 70, impact > 0, max SVM > 25, atau speech medium.
-
-**LOW** selain kondisi di atas.
-
-### Disfluensi (fluency)
-
-Deteksi burst suku kata pendek (<= 120 ms) + micro-pause (20-100 ms) berulang. SOS high jika >= 4 stutter-pause atau >= 3 dengan rate >= 2/detik.
-
-## Quick start
-
-
-
-### Backend
-
-```bash
-cd backend
-uv sync
-cp .env.example .env
-docker compose up -d   # optional: postgres + redis
-uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-API docs: [http://localhost:8000/docs](http://localhost:8000/docs)
-
-Detail: [backend/README.md](./backend/README.md)
-
-### Mobile
-
-```bash
-cd mobile
-flutter pub get
-flutter run
-```
-
-Atur alamat server di Pengaturan aplikasi jika backend tidak di localhost. Gunakan perangkat fisik untuk sensor, mikrofon, dan GPS.
-
-Detail: [mobile/README.md](./mobile/README.md)
-
-### Tests
-
-```bash
-# backend
-cd backend && uv run pytest -q
-
-# mobile
-cd mobile && flutter test
-```
-
-
-
-## Project structure
-
-```
-stroketion/
-├── backend/          FastAPI, speech pipeline, tests
-├── mobile/           Flutter app (pasien + caregiver)
-├── LICENSE           MIT
-└── README.md
-```
-
-
-
-## Disclaimer
-
-Stroketion memberikan indikator berbasis sensor dan analisis sinyal. Hasil bukan diagnosis medis. Keputusan klinis tetap pada tenaga kesehatan profesional.
-
-## License
-
-[MIT](./LICENSE)
