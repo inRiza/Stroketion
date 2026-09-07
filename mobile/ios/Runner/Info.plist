@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Mobile</string>
+	<string>Stroketion</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,8 +24,17 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Mikrofon digunakan untuk analisis suara selama sesi monitoring.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Sensor gerak digunakan untuk memantau orientasi perangkat selama sesi.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>GPS digunakan untuk melacak rute perjalanan saat sesi di luar.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
