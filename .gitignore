@@ -1,0 +1,9 @@
+.DS_Store
+**/.DS_Store
+
+# local docs and demo tooling (not for repo)
+context/
+backend/scripts/
+
+# mobile build artifacts
+mobile/android/build/
