@@ -21,6 +21,22 @@ class UserCreate(BaseModel):
     role: str = "patient"
 
 
+class RegisterRequest(BaseModel):
+    email: EmailStr
+    password: str
+    full_name: str
+    role: str = "patient"
+    phone: str | None = None
+    gender: str | None = None
+    date_of_birth: str | None = None
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+    role: str | None = None
+
+
 class UserResponse(BaseModel):
     id: str
     email: EmailStr
@@ -34,6 +50,12 @@ class UserResponse(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+class AuthResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserResponse
 
 
 class BaselineResponse(BaseModel):
