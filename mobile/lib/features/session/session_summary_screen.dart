@@ -6,9 +6,11 @@ import '../../models/monitoring_session_record.dart';
 import '../../models/session_timeline.dart';
 import '../../services/session_gps_service.dart';
 import '../../services/session_insights.dart';
+import '../../services/session_event_timeline.dart';
 import '../../widgets/ui/soft_card.dart';
 import 'session_detail_screen.dart';
 import 'widgets/balance_timeline_chart.dart';
+import 'widgets/session_event_timeline.dart';
 import 'widgets/session_map_view.dart';
 import 'widgets/speech_clinical_segments_list.dart';
 import 'widgets/speech_insight_panel.dart';
@@ -57,6 +59,8 @@ class SessionSummaryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final timelineEvents = SessionEventTimeline.build(record);
+
     return Scaffold(
       backgroundColor: AppColors.primaryDark,
       appBar: AppBar(
@@ -169,6 +173,12 @@ class SessionSummaryScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              const SizedBox(height: 20),
+              const _SectionTitle('Timeline Kejadian'),
+              const SizedBox(height: 10),
+              SoftCard(
+                child: SessionEventTimelineView(events: timelineEvents),
               ),
               const SizedBox(height: 20),
               const _SectionTitle('Grafik Balance'),

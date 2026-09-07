@@ -71,7 +71,7 @@ class SpeechClinicalSegment {
         : start + (durationMs / 1000).ceil();
     final durSec = (durationMs / 1000).toStringAsFixed(1);
     if (end > start) {
-      return '${start}s–${end}s ($durSec detik)';
+      return '${start}s-${end}s ($durSec detik)';
     }
     return '${start}s (+$durSec detik)';
   }

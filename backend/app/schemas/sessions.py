@@ -79,6 +79,7 @@ class SessionResponse(BaseModel):
     route: list[dict[str, Any]]
     distance_meters: float
     gps_active: bool
+    speech_analysis: dict[str, Any] | None = None
     created_at: datetime
 
     model_config = {"from_attributes": True}

@@ -128,6 +128,7 @@ class MonitoringSession(Base):
     route_json: Mapped[str | None] = mapped_column(Text)
     distance_meters: Mapped[float] = mapped_column(default=0)
     gps_active: Mapped[bool] = mapped_column(default=False)
+    speech_analysis_json: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 

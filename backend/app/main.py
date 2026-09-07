@@ -13,10 +13,24 @@ from app.models import domain  # noqa: F401
 logger = logging.getLogger(__name__)
 
 
+def _patch_monitoring_session_columns(conn) -> None:
+    from sqlalchemy import inspect, text
+
+    inspector = inspect(conn)
+    if "monitoring_sessions" not in inspector.get_table_names():
+        return
+    columns = {col["name"] for col in inspector.get_columns("monitoring_sessions")}
+    if "speech_analysis_json" not in columns:
+        conn.execute(
+            text("ALTER TABLE monitoring_sessions ADD COLUMN speech_analysis_json TEXT")
+        )
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(_patch_monitoring_session_columns)
 
     try:
         from app.speech.deps import SpeechMlUnavailableError, ensure_speech_ml

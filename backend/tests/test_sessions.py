@@ -64,14 +64,37 @@ async def test_upload_session_with_speech(client: AsyncClient):
         "route": [],
         "distance_meters": 0,
         "gps_active": False,
+        "speech_analysis": {
+            "confirmed_seconds": 120,
+            "vad_active_seconds": 130,
+            "speech_score": 88,
+            "dysarthria_risk": "none",
+            "aphasia_risk": "none",
+            "clinical_segments": [
+                {
+                    "offset_sec": 45,
+                    "duration_ms": 5000,
+                    "started_at_ms": 45000,
+                    "flags": ["indikasi_disfluensi"],
+                    "pcm_base64": "AAAA",
+                }
+            ],
+        },
     }
 
     upload = await client.post("/api/v1/sessions", json=payload, headers=_auth(token))
     assert upload.status_code == 200
     body = upload.json()
     assert body["speech_score"] == 88
-    assert body["speech_detected_seconds"] == 120
+    assert body["speech_detected_seconds"] == 130
     assert body["user_id"] == user_id
+    assert body["speech_analysis"] is not None
+    assert len(body["speech_analysis"]["clinical_segments"]) == 1
+
+    detail = await client.get("/api/v1/sessions/session-test-001", headers=_auth(token))
+    assert detail.status_code == 200
+    detail_body = detail.json()
+    assert detail_body["speech_analysis"]["clinical_segments"][0]["offset_sec"] == 45
 
     mine = await client.get("/api/v1/sessions/me", headers=_auth(token))
     assert mine.status_code == 200

@@ -43,6 +43,16 @@ async def assert_patient_access(db: AsyncSession, actor: User, patient_id: str) 
     return patient
 
 
+def _parse_speech_analysis(session: MonitoringSession) -> dict | None:
+    if not session.speech_analysis_json:
+        return None
+    try:
+        data = json.loads(session.speech_analysis_json)
+        return data if isinstance(data, dict) else None
+    except json.JSONDecodeError:
+        return None
+
+
 def _to_response(session: MonitoringSession) -> SessionResponse:
     timeline = json.loads(session.timeline_json) if session.timeline_json else []
     route = json.loads(session.route_json) if session.route_json else []
@@ -72,6 +82,7 @@ def _to_response(session: MonitoringSession) -> SessionResponse:
         route=route,
         distance_meters=session.distance_meters,
         gps_active=session.gps_active,
+        speech_analysis=_parse_speech_analysis(session),
         created_at=session.created_at,
     )
 
@@ -146,6 +157,9 @@ async def create_session(
         route_json=json.dumps(data.route),
         distance_meters=data.distance_meters,
         gps_active=data.gps_active,
+        speech_analysis_json=json.dumps(data.speech_analysis)
+        if data.speech_analysis
+        else None,
     )
     db.add(session)
 
